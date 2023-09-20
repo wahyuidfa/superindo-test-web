@@ -100,11 +100,11 @@ export default function Login({}: Props) {
 
                     <p className='mt-10 text-center text-sm text-gray-500'>
                         Not a member?
-                        <a
-                            href='#'
+                        <button
+                            onClick={() => router.push("/register")}
                             className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'>
-                            Start a 14 day free trial
-                        </a>
+                            Sign Up
+                        </button>
                     </p>
                 </div>
             </div>

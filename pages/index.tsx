@@ -138,7 +138,7 @@ export default function Home() {
                                         style={{
                                             height: 200,
                                         }}
-                                        image={"vercel.svg"}
+                                        image={product.image_location}
                                         title={product.name}
                                     />
                                     <CardContent>

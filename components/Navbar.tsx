@@ -59,19 +59,20 @@ export const Navbar = ({ addToCart, removeFromCart, cartItems, setReceiptOpen }:
 
     return (
         <div>
-            {" "}
-            <SwipeableDrawer
-                anchor={"right"}
-                open={isOpen}
-                onClose={() => setIsOpen(false)}
-                onOpen={() => setIsOpen(true)}>
-                <Cart
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
-                    cartItems={cartItems}
-                    setReceiptOpen={setReceiptOpen}
-                />
-            </SwipeableDrawer>
+            {dataUser?.role === "customer" && (
+                <SwipeableDrawer
+                    anchor={"right"}
+                    open={isOpen}
+                    onClose={() => setIsOpen(false)}
+                    onOpen={() => setIsOpen(true)}>
+                    <Cart
+                        addToCart={addToCart}
+                        removeFromCart={removeFromCart}
+                        cartItems={cartItems}
+                        setReceiptOpen={setReceiptOpen}
+                    />
+                </SwipeableDrawer>
+            )}
             <nav className='bg-gray-800'>
                 <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
                     <div className='flex h-16 items-center justify-between'>
@@ -117,18 +118,22 @@ export const Navbar = ({ addToCart, removeFromCart, cartItems, setReceiptOpen }:
                         <div className='hidden md:block'>
                             <div className='ml-4 flex items-center md:ml-6 justify-between'>
                                 {" "}
-                                <IconButton
-                                    aria-label='Show cart items'
-                                    color='inherit'
-                                    onClick={() => setIsOpen(true)}>
-                                    <Badge badgeContent={getTotalItems(cartItems)} color='error'>
-                                        <ShoppingBagOutlined
-                                            style={{
-                                                color: "white",
-                                            }}
-                                        />
-                                    </Badge>
-                                </IconButton>{" "}
+                                {dataUser?.role === "customer" && (
+                                    <IconButton
+                                        aria-label='Show cart items'
+                                        color='inherit'
+                                        onClick={() => setIsOpen(true)}>
+                                        <Badge
+                                            badgeContent={getTotalItems(cartItems)}
+                                            color='error'>
+                                            <ShoppingBagOutlined
+                                                style={{
+                                                    color: "white",
+                                                }}
+                                            />
+                                        </Badge>
+                                    </IconButton>
+                                )}
                                 <div>
                                     <IconButton onClick={handleClick}>
                                         <AccountCircleOutlined

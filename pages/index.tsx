@@ -27,6 +27,13 @@ const style = {
     p: 4,
 };
 
+type dataUser = {
+    nama: string;
+    role: string;
+    email: string;
+    token: string;
+};
+
 export default function Home() {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -34,6 +41,7 @@ export default function Home() {
     const [cartItems, setCartItems] = useState<any>([]);
     const [receiptOpen, setReceiptOpen] = useState(false);
     const selectedProduct = useSelector((state: any) => state.selectedProduct);
+    const [dataUser, setDataUser] = useState<dataUser>();
 
     const componentRef: any = useRef();
 
@@ -88,6 +96,8 @@ export default function Home() {
     };
 
     useEffect(() => {
+        const data = JSON.parse(`${localStorage.getItem("dataUser")}`);
+        setDataUser(data);
         dispatch(selectProduct(cartItems));
     }, [cartItems]);
 
@@ -154,13 +164,15 @@ export default function Home() {
                                                 Rp. {product.price}
                                             </Typography>
                                         </div>
-                                        <Button
-                                            onClick={() => handleAddToCart(product)}
-                                            style={{
-                                                backgroundColor: "blanchedalmond",
-                                            }}>
-                                            Add to Cart
-                                        </Button>
+                                        {dataUser?.role === "customer" && (
+                                            <Button
+                                                onClick={() => handleAddToCart(product)}
+                                                style={{
+                                                    backgroundColor: "blanchedalmond",
+                                                }}>
+                                                Add to Cart
+                                            </Button>
+                                        )}
 
                                         <Typography fontSize='14px' color='textSecondary'>
                                             {product.category}

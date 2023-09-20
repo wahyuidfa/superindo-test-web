@@ -15,13 +15,14 @@ const authRouter = require("./routes/auth");
 const productsRouter = require("./routes/products");
 const categoriesRouter = require("./routes/categories");
 const productVariantsRouter = require("./routes/productVariants");
+const transactionsRouter = require("./routes/transactions");
 // Connect to SQLite
 const db = new sqlite3.Database("superindo.db"); // Menggunakan nama file my-mini-backend.db
 
 db.serialize(() => {
-  // Membuat tabel jika belum ada
-  db.run(
-    `CREATE TABLE IF NOT EXISTS product (
+    // Membuat tabel jika belum ada
+    db.run(
+        `CREATE TABLE IF NOT EXISTS product (
       id INTEGER PRIMARY KEY,
       plu TEXT NOT NULL,
       name TEXT NOT NULL,
@@ -32,9 +33,9 @@ db.serialize(() => {
       updated_user TEXT,
       updated_date TEXT
   ) `
-  );
-  db.run(
-    `CREATE TABLE IF NOT EXISTS category (
+    );
+    db.run(
+        `CREATE TABLE IF NOT EXISTS category (
       id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
       active BOOLEAN NOT NULL DEFAULT 1,
@@ -43,9 +44,9 @@ db.serialize(() => {
       updated_user TEXT,
       updated_date TEXT
   )`
-  );
+    );
 
-  db.run(`
+    db.run(`
     CREATE TABLE IF NOT EXISTS product_variant (
       id INTEGER PRIMARY KEY,
       product_id INTEGER,
@@ -62,19 +63,50 @@ db.serialize(() => {
     )
   `);
 
-  // Menampilkan pesan setelah koneksi berhasil
-  console.log("Connected to the SQLite database");
+    db.run(`
+    CREATE TABLE IF NOT EXISTS transactions (
+      id INTEGER PRIMARY KEY, 
+      transaction_no TEXT, 
+      total_amount REAL NOT NULL, 
+      active  BOOLEAN NOT NULL DEFAULT 1,
+      created_user TEXT,
+      created_date TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_user TEXT,
+      updated_date TEXT
+    )
+  `);
+
+    db.run(`
+    CREATE TABLE IF NOT EXISTS TransactionDetail  (
+      id INTEGER PRIMARY KEY, 
+      transaction_id TEXT, 
+      products TEXT
+      created_user TEXT,
+      created_date TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_user TEXT,
+      updated_date TEXT
+  )
+`);
+
+    // Menampilkan pesan setelah koneksi berhasil
+    ("Connected to the SQLite database");
 });
 
 // Routes
+const corsOptions = {
+    origin: "*",
+};
+
+server.use(cors(corsOptions));
 server.use("/api/auth", authRouter);
 server.use("/api/products", productsRouter); // Mengirimkan objek database SQLite ke rute
 server.use("/api/categories", categoriesRouter); // Mengirimkan objek database SQLite ke rute
 server.use("/api/productvariants", productVariantsRouter);
+server.use("/api/transactions", transactionsRouter);
 
 // Start the server
 // const PORT = process.env.PORT || 5000;
 server.listen(4000, (err) => {
-  if (err) throw err;
-  console.log("> Ready on http://localhost:4000");
+    if (err) throw err;
+    ("> Ready on http://localhost:4000");
 });
